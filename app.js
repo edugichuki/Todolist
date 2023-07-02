@@ -163,6 +163,11 @@ app.get("/about", (req, res) => {
   res.render("about");
 });
 
-app.listen(8080, () => {
-  console.log("listening on port 8080");
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+app.listen(port, () => {
+  console.log("Server started on port 3000");
 });
