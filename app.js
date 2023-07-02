@@ -104,6 +104,8 @@ app.get("/:customListName", (req, res) => {
         newListItems: foundList.items,
       });
     }
+  }).catch((err) => {
+    console.log(err);
   });
 });
 
@@ -129,6 +131,8 @@ app.post("/", (req, res) => {
       foundList.items.push(item);
       foundList.save();
       res.redirect("/" + listName);
+    }).catch((err) =>{
+      console.log(err);
     });
   }
 });
@@ -155,6 +159,8 @@ app.post("/delete", (req, res) => {
       { $pull: { items: { _id: checkedItemId } } }
     ).then(() => {
       res.redirect("/" + listName);
+    }).catch((err) => {
+      console.log(err);
     });
   }
 });
