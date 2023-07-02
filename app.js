@@ -20,21 +20,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-const userName = process.env.USER_NAME;
+const userName = process.env.MONGO_USER;
 
-const password = process.env.PASSWORD;
+const password = process.env.MONGO_PASS;
+
+const myDatabase = process.env.MONGO_DATABASE;
+
+const url = `mongodb+srv://${userName}:${password}@cluster0.lgicwyo.mongodb.net/${myDatabase}?retryWrites=true&w=majority`
 
 //! mongodb://127.0.0.1:27017
 mongoose
   .connect(
-    `mongodb+srv://${userName}:${password}@cluster0.lgicwyo.mongodb.net/todolistDB`,
+    url,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: true,
     }
   )
-  .then(() => console.log("DB is connected"))
-  .catch((err) => console.log(err));
+  .then(() => console.log('Connected to database !!'))
+  .catch((err) => console.log('Connection failed !!' + err.message));
 
 const itemsSchema = new mongoose.Schema({
   name: String,
