@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 
 const _ = require("lodash");
 
-require("dotenv").config({path: '.env'});
+require("dotenv").config({path : 'vars/.env'});
 
 const date = require(__dirname + "/date.js");
 
@@ -26,7 +26,7 @@ const password = process.env.MONGO_PASS;
 
 const myDatabase = process.env.MONGO_DATABASE;
 
-const url = "mongodb+srv://muriithigichuki854:password@cluster0.1lwat6t.mongodb.net/myDatabase?retryWrites=true&w=majority"
+const url = "mongodb+srv://" + userName + ":" + password + "@cluster0.1lwat6t.mongodb.net/" + myDatabase + "?retryWrites=true&w=majority"
 
 mongoose
   .connect(
