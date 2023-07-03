@@ -26,9 +26,7 @@ const password = process.env.MONGO_PASS;
 
 const myDatabase = process.env.MONGO_DATABASE;
 
-
-
-const url = "mongodb+srv://" + process.env.MONGO_USER + ":" + process.env.MONGO_PASS + "@cluster0.1lwat6t.mongodb.net/todolistDB?retryWrites=true&w=majority"
+const url = "mongodb+srv://admin-edv_1:test-123@cluster0.1lwat6t.mongodb.net/todolistDB?retryWrites=true&w=majority"
 
 mongoose
   .connect(
