@@ -28,7 +28,7 @@ const myDatabase = process.env.MONGO_DATABASE;
 
 
 
-const url = "mongodb+srv://" + process.env.MONGO_USER + ":" + process.env.MONGO_PASS + "@cluster0.1lwat6t.mongodb.net/" + process.env.MONGO_DATABASE + "?retryWrites=true&w=majority"
+const url = "mongodb+srv://" + process.env.MONGO_USER + ":" + process.env.MONGO_PASS + "@cluster0.1lwat6t.mongodb.net/todolistDB?retryWrites=true&w=majority"
 
 mongoose
   .connect(
