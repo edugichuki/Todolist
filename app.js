@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 
 const _ = require("lodash");
 
-require("dotenv").config({path : 'vars/.env'});
+require("dotenv").config();
 
 const date = require(__dirname + "/date.js");
 
@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
+console.log(process.env.MONGO_URI);
 mongoose
   .connect(
     process.env.MONGO_URI,
