@@ -20,12 +20,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-const userName = process.env.MONGO_USER;
-
-const password = process.env.MONGO_PASS;
-
-const myDatabase = process.env.MONGO_DATABASE;
-
 mongoose
   .connect(
     process.env.MONGO_URI,
