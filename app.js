@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 
 const _ = require("lodash");
 
-require("dotenv").config();
+require("dotenv").config({ path: "vars/.env" });
 
 const date = require(__dirname + "/date.js");
 
@@ -20,16 +20,28 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-mongoose
-  .connect(
-    process.env.MONGO_URI,
-    {
+let db = "";
+async function main() {
+  try {
+    const url = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.1lwat6t.mongodb.net/wikiDB?retryWrites=true&w=majority`;
+    db = mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    }
-  )
-  .then(() => console.log('Connected to database !!'))
-  .catch((err) => console.log('Connection failed !!' + err.message));
+    });
+    console.log("successfully connected to the database");
+  } catch (err) {
+    console.log(err);
+  }
+}
+main();
+
+// mongoose
+//   .connect(url, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => console.log("Connected to database !!"))
+//   .catch((err) => console.log("Connection failed !!" + err.message));
 
 const itemsSchema = new mongoose.Schema({
   name: String,
@@ -77,25 +89,27 @@ app.get("/", async (req, res) => {
 app.get("/:customListName", (req, res) => {
   const customListName = _.capitalize(req.params.customListName);
 
-  List.findOne({ name: customListName }).then((foundList) => {
-    if (!foundList) {
-      // Create a new List
-      const list = new List({
-        name: customListName,
-        items: defaultItems,
-      });
-      list.save();
-      res.redirect("/" + customListName);
-    } else {
-      // Show an existing List
-      res.render("lists", {
-        listTitle: foundList.name,
-        newListItems: foundList.items,
-      });
-    }
-  }).catch((err) => {
-    console.log(err);
-  });
+  List.findOne({ name: customListName })
+    .then((foundList) => {
+      if (!foundList) {
+        // Create a new List
+        const list = new List({
+          name: customListName,
+          items: defaultItems,
+        });
+        list.save();
+        res.redirect("/" + customListName);
+      } else {
+        // Show an existing List
+        res.render("lists", {
+          listTitle: foundList.name,
+          newListItems: foundList.items,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/", (req, res) => {
@@ -116,13 +130,15 @@ app.post("/", (req, res) => {
     res.redirect("/");
   } else {
     //! If theuser came from a custom list, we find the custom list and add the new item to the items in that list and finally redirect back to the custom page
-    List.findOne({ name: listName }).then((foundList) => {
-      foundList.items.push(item);
-      foundList.save();
-      res.redirect("/" + listName);
-    }).catch((err) =>{
-      console.log(err);
-    });
+    List.findOne({ name: listName })
+      .then((foundList) => {
+        foundList.items.push(item);
+        foundList.save();
+        res.redirect("/" + listName);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 });
 
@@ -146,11 +162,13 @@ app.post("/delete", (req, res) => {
     List.findOneAndUpdate(
       { name: listName },
       { $pull: { items: { _id: checkedItemId } } }
-    ).then(() => {
-      res.redirect("/" + listName);
-    }).catch((err) => {
-      console.log(err);
-    });
+    )
+      .then(() => {
+        res.redirect("/" + listName);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 });
 
