@@ -20,28 +20,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-let db = "";
-async function main() {
+mongoose.set("strictQuery", false);
+const connectDB = async () => {
   try {
-    const url = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.1lwat6t.mongodb.net/wikiDB?retryWrites=true&w=majority`;
-    db = mongoose.connect(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("successfully connected to the database");
+    const url = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.1lwat6t.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
+    const conn = await mongoose.connect(url);
+    console.log(`MongoDB Connected: ${conn.host}`);
   } catch (err) {
-    console.log(err);
+    console.log("Connection failed !!" + err.message);
+    process.exit(1);
   }
-}
-main();
-
-// mongoose
-//   .connect(url, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//   .then(() => console.log("Connected to database !!"))
-//   .catch((err) => console.log("Connection failed !!" + err.message));
+};
 
 const itemsSchema = new mongoose.Schema({
   name: String,
@@ -187,6 +176,8 @@ if (port == null || port == "") {
   port = 3000;
 }
 
-app.listen(port, () => {
-  console.log("Server started on port 3000");
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+  });
 });
