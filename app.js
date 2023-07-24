@@ -25,7 +25,7 @@ const connectDB = async () => {
   try {
     const url = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.1lwat6t.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
     const conn = await mongoose.connect(url);
-    console.log(`MongoDB Connected: ${conn.host}`);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
     console.log("Connection failed !!" + err.message);
     process.exit(1);
